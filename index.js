@@ -15,6 +15,12 @@ const app = express();
 
 // Middleware to parse incoming JSON requests
 app.use(express.json());
+const cors = require('cors')
+let corsOptions = {
+    origin : '*',
+ }
+ app.use(cors(corsOptions))
+
 
 // Load Routes
 const userRoute = require("./routes/userRoute"); 
