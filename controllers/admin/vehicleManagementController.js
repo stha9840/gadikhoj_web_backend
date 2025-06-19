@@ -1,4 +1,4 @@
-const VehicleDetail = require("../../models/VehicleDetail");
+const VehicleDetail = require("../../models/VehicleDetails");
 
 // CREATE - Add a new vehicle
 exports.createVehicle = async (req, res) => {
@@ -9,8 +9,10 @@ exports.createVehicle = async (req, res) => {
         loadCapacityKg,
         passengerCapacity,
         pricePerTrip,
-        filepath
+        
     } = req.body;
+    const filepath = req.file ? req.file.path : null;
+
 
     try {
         const newVehicle = new VehicleDetail({
@@ -31,12 +33,14 @@ exports.createVehicle = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            success: false,
-            message: "Server error",
-        });
-    }
+    console.error("Error in createVehicle:", error.message, error.stack);
+    return res.status(500).json({
+        success: false,
+        message: "Server error",
+        error: error.message // Add this line for debugging
+    });
+}
+
 };
 
 // READ - Get all vehicles

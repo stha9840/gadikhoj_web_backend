@@ -1,34 +1,38 @@
 const express = require("express");
 const router = express.Router();
 
+// Corrected middleware import — change "uploads" to "upload" if your file is upload.js
+const upload = require("../../middlewares/uploads");
+
 const {
     createVehicle,
     getAllVehicles,
     updateVehicle,
     deleteVehicle
-} = require("../../controllers/admin/vehicleController");
+} = require("../../controllers/admin/vehicleManagementController");
 
-// CREATE vehicle
+// Route to create a vehicle with a single file upload named 'file'
 router.post(
-    '/create',
+    "/",
+    upload.single("image"),
     createVehicle
 );
 
-// READ all vehicles
+// Get all vehicles
 router.get(
-    '/',
+    "/",
     getAllVehicles
 );
 
-// UPDATE vehicle by ID
+// Update vehicle by ID
 router.put(
-    '/:id',
+    "/:id",
     updateVehicle
 );
 
-// DELETE vehicle by ID
+// Delete vehicle by ID
 router.delete(
-    '/:id',
+    "/:id",
     deleteVehicle
 );
 
