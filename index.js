@@ -2,6 +2,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const adminUserRoute = require("./routes/admin/adminUserRoute")
 
 // Load environment variables from .env file
 require('dotenv').config();
@@ -26,6 +27,7 @@ let corsOptions = {
 const userRoute = require("./routes/userRoute"); 
 // Mount routes with prefix
 app.use("/api/auth", userRoute) 
+app.use("/api/admin/user", adminUserRoute)
 // Define server port
 const PORT = process.env.PORT || 5000;
 

@@ -1,6 +1,6 @@
-const express = require("exporess")
+const express = require("express")
 const router = express.Router()
-const { createUser, getUser, getOneUser, updateOneUser, deleteOne, deleteOneUser} = require("../../controllers/admin/userManagementController")
+const { createUser, getUsers, updateOneUser, deleteOneUser} = require("../../controllers/admin/userManagementController")
 
 router.post(
     '/create',
@@ -8,7 +8,7 @@ router.post(
 )
 router.get(
     "/",
-    getUser
+    getUsers
 )
 router.put(
     "/:id",
@@ -18,3 +18,5 @@ router.delete(
     "/:id",
     deleteOneUser
 )
+
+module.exports = router

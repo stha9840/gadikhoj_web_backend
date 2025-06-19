@@ -1,6 +1,6 @@
-const User = require("../models/User");
+const User = require("../../models/User");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 
 // Register User
 exports.createUser = async (req, res) => {
@@ -72,7 +72,7 @@ exports.getUsers = async (req, res) => {
 
 // update
 exports.updateOneUser = async (req, res) => {
-    const { firstName, email } = req.body
+    const { username, email } = req.body
     const _id = req.params.id
     try {
         const user = await User.updateOne(
@@ -81,7 +81,7 @@ exports.updateOneUser = async (req, res) => {
             },
             {
                 $set: {
-                    "firstName": firstName,
+                    "username": username,
                     "email": email
                 }
             }
