@@ -2,19 +2,26 @@ const VehicleDetail = require("../../models/VehicleDetails");
 
 // CREATE - Add a new vehicle
 exports.createVehicle = async (req, res) => {
-    const {
-        vehicleName,
-        vehicleType,
-        fuelCapacityLitres,
-        loadCapacityKg,
-        passengerCapacity,
-        pricePerTrip,
-        
-    } = req.body;
-    const filepath = req.file ? req.file.path : null;
-
-
     try {
+        if (!req.body.vehicle) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing vehicle data in form",
+            });
+        }
+
+        // Parse stringified vehicle JSON sent from frontend/form
+        const {
+            vehicleName,
+            vehicleType,
+            fuelCapacityLitres,
+            loadCapacityKg,
+            passengerCapacity,
+            pricePerTrip
+        } = JSON.parse(req.body.vehicle);
+
+        const filepath = req.file ? req.file.path : null;
+
         const newVehicle = new VehicleDetail({
             vehicleName,
             vehicleType,
@@ -29,19 +36,19 @@ exports.createVehicle = async (req, res) => {
 
         return res.status(201).json({
             success: true,
-            message: "Vehicle added successfully",
+            message: "Vehicle added successfully"
         });
 
     } catch (error) {
-    console.error("Error in createVehicle:", error.message, error.stack);
-    return res.status(500).json({
-        success: false,
-        message: "Server error",
-        error: error.message // Add this line for debugging
-    });
-}
-
+        console.error("Error in createVehicle:", error.message, error.stack);
+        return res.status(500).json({
+            success: false,
+            message: "Server error",
+            error: error.message
+        });
+    }
 };
+
 
 // READ - Get all vehicles
 exports.getAllVehicles = async (req, res) => {

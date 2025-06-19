@@ -13,7 +13,7 @@ const {
 
 // Route to create a vehicle with a single file upload named 'file'
 router.post(
-    "/",
+    "/create",
     upload.single("image"),
     createVehicle
 );

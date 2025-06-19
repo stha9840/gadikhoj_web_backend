@@ -28,7 +28,8 @@ const VehicleDetailsSchema = new mongoose.Schema(
         },
         filepath: {
             type: String
-        }
+        },
+
     },
     { timestamps: true }
 );

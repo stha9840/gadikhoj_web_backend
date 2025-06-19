@@ -1,5 +1,6 @@
 // Import core dependencies
 const express = require("express");
+const path = require("path");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const adminUserRoute = require("./routes/admin/adminUserRoute")
@@ -23,7 +24,7 @@ let corsOptions = {
  }
  app.use(cors(corsOptions))
 
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Load Routes
 const userRoute = require("./routes/userRoute"); 
 // Mount routes with prefix
