@@ -8,6 +8,7 @@ const {
     createVehicle,
     getAllVehicles,
     updateVehicle,
+    getOneVehicle,
     deleteVehicle
 } = require("../../controllers/admin/vehicleManagementController");
 
@@ -22,6 +23,10 @@ router.post(
 router.get(
     "/",
     getAllVehicles
+);
+router.get(
+    "/",
+    getOneVehicle
 );
 
 // Update vehicle by ID

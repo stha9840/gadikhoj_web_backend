@@ -131,3 +131,30 @@ exports.deleteVehicle = async (req, res) => {
         });
     }
 };
+// READ - Get one vehicle by ID
+exports.getOneVehicle = async (req, res) => {
+  const _id = req.params.id;
+
+  try {
+    const vehicle = await VehicleDetail.findById(_id);
+
+    if (!vehicle) {
+      return res.status(404).json({
+        success: false,
+        message: "Vehicle not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Vehicle fetched successfully",
+      data: vehicle,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};

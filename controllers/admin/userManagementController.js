@@ -130,3 +130,42 @@ exports.deleteOneUser = async (req, res) => {
     }
 }
 
+exports.getOneUser = async(req, res) =>{
+    try{
+        const _id = req.params.id
+        const user = await User.findById(_id)
+        return res.status(200).json(
+            {
+                "success": true,
+                "message" : "One User Fetched",
+                "data" : user
+            }
+        )
+    }catch(err){
+        return res.status(500).json(
+            {
+                "success" : false,
+                "message" :" Server Error"
+            }
+        )
+    }
+}
+// Get total user count
+exports.getUserCount = async (req, res) => {
+  try {
+    // Assuming you use Mongoose and User is your user model
+    const count = await User.countDocuments();
+
+    return res.status(200).json({
+      success: true,
+      total: count,
+    });
+  } catch (error) {
+    console.error("Error fetching user count:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
+
