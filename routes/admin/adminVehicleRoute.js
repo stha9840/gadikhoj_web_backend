@@ -25,15 +25,14 @@ router.get(
     getAllVehicles
 );
 router.get(
-    "/",
+    "/:id",
     getOneVehicle
 );
 
 // Update vehicle by ID
-router.put(
-    "/:id",
-    updateVehicle
-);
+router.put("/:id",
+     upload.single("image"),
+      updateVehicle);
 
 // Delete vehicle by ID
 router.delete(
