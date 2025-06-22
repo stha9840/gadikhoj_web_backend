@@ -153,8 +153,11 @@ exports.getOneUser = async(req, res) =>{
 // Get total user count
 exports.getUserCount = async (req, res) => {
   try {
-    // Assuming you use Mongoose and User is your user model
+    console.log("Entered getUserCount controller");
+
     const count = await User.countDocuments();
+
+    console.log("User count fetched:", count);
 
     return res.status(200).json({
       success: true,
@@ -168,4 +171,3 @@ exports.getUserCount = async (req, res) => {
     });
   }
 };
-
