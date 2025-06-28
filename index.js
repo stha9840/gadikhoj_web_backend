@@ -33,6 +33,8 @@ app.use("/api/auth", userRoute)
 app.use("/api/admin/user", adminUserRoute)
 app.use("/api/admin/vehicle", adminVehicleRoute);
 app.use("/api/bookings", bookingRoute );// booking route added
+app.use("/api/admin/bookings", bookingRoute );// booking route added
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Define server port
 const PORT = process.env.PORT || 5000;

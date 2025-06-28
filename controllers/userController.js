@@ -98,7 +98,7 @@ exports.loginUser = async (req, res) => {
             success: true,
             message: "Login successful",
             data: userData,
-            token
+            token : token
         });
 
     } catch (error) {

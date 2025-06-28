@@ -4,9 +4,9 @@ const Vehicle = require("../models/VehicleDetails");
 // Create a new booking (user)
 exports.createBooking = async (req, res) => {
   try {
-    const { userId, vehicleId, startDate, endDate, pickupLocation, dropLocation } = req.body;
+    const {  vehicleId, startDate, endDate, pickupLocation, dropLocation } = req.body;
 
-    if (!userId) {
+    if (!req.user._id) {
       return res.status(400).json({ message: "userId is required for testing" });
     }
 
@@ -28,7 +28,7 @@ exports.createBooking = async (req, res) => {
     const totalPrice = days * vehicle.pricePerTrip + pickupFee + dropFee;
 
     const booking = new Booking({
-      userId,
+      userId:req.user._id,
       vehicleId,
       startDate: start,
       endDate: end,
