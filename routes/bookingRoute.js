@@ -12,6 +12,9 @@ router.get("/my", authenticateUser, bookingController.getUserBookings);
 // Get all bookings (Admin)
 router.get("/", bookingController.getAllBookings);
 
+//  Get a single booking by ID
+router.get("/:bookingId", authenticateUser, bookingController.getOneBooking);
+
 // Cancel a booking
 router.patch("/:bookingId/cancel", authenticateUser, bookingController.cancelBooking);
 

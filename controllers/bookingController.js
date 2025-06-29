@@ -124,3 +124,21 @@ exports.deleteBooking = async (req, res) => {
     res.status(500).json({ message: "Failed to delete booking", error: error.message });
   }
 };
+// Get a single booking by ID
+exports.getOneBooking = async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+
+    const booking = await Booking.findById(bookingId)
+      .populate("userId", "name email")
+      .populate("vehicleId", "vehicleName vehicleType pricePerTrip");
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res.status(200).json(booking);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to get booking", error: error.message });
+  }
+};
