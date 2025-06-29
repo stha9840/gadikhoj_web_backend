@@ -7,7 +7,7 @@ const { authenticateUser } = require("../middlewares/authenticateUser");
 // Later, add it to protect these routes.
 
 router.post("/", authenticateUser,  bookingController.createBooking);        // Create booking
-router.get("/my", bookingController.getUserBookings);     // Get bookings of logged-in user
+router.get("/my",authenticateUser, bookingController.getUserBookings);     // Get bookings of logged-in user
 router.get("/", bookingController.getAllBookings);        // Admin: get all bookings
 router.patch("/:bookingId/cancel", bookingController.cancelBooking);  // Cancel booking
 
