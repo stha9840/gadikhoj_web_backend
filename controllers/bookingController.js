@@ -49,7 +49,8 @@ exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await Booking.find()
       .populate("userId", "username email")
-      .populate("vehicleId", "vehicleName vehicleType pricePerTrip");
+      .populate("vehicleId", "vehicleName vehicleType pricePerTrip filepath");
+
 
     res.status(200).json(bookings);
   } catch (error) {
@@ -61,7 +62,7 @@ exports.getAllBookings = async (req, res) => {
 exports.getUserBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({ userId: req.user._id })
-      .populate("vehicleId", "vehicleName vehicleType pricePerTrip");
+      .populate("vehicleId", "vehicleName vehicleType pricePerTrip filepath");
 
     res.status(200).json(bookings);
   } catch (error) {
