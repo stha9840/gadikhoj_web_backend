@@ -19,6 +19,9 @@ router.post(
     createVehicle
 );
 
+// Updated vehicle
+// router.put("/update/:id", upload.single("imageFile"), updateVehicle);
+
 // Get all vehicles
 router.get(
     "/",

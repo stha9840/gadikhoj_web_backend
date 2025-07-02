@@ -48,7 +48,7 @@ exports.createBooking = async (req, res) => {
 exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await Booking.find()
-      .populate("userId", "name email")
+      .populate("userId", "username email")
       .populate("vehicleId", "vehicleName vehicleType pricePerTrip");
 
     res.status(200).json(bookings);

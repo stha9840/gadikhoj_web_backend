@@ -1,5 +1,6 @@
 const VehicleDetail = require("../../models/VehicleDetails");
-
+const fs = require("fs");
+const path = require("path");
 // CREATE - Add a new vehicle
 exports.createVehicle = async (req, res) => {
     try {
@@ -20,7 +21,8 @@ exports.createVehicle = async (req, res) => {
             pricePerTrip
         } = JSON.parse(req.body.vehicle);
 
-        const filepath = req.file ? req.file.path : null;
+        const filepath = req.file ? req.file.filename : null;
+
 
         const newVehicle = new VehicleDetail({
             vehicleName,
@@ -70,45 +72,73 @@ exports.getAllVehicles = async (req, res) => {
 
 // UPDATE - Update a vehicle by ID
 exports.updateVehicle = async (req, res) => {
-    const _id = req.params.id;
+  const _id = req.params.id;
+
+  try {
     const {
-        vehicleName,
-        vehicleType,
-        fuelCapacityLitres,
-        loadCapacityKg,
-        passengerCapacity,
-        pricePerTrip,
-        filepath
+      vehicleName,
+      vehicleType,
+      fuelCapacityLitres,
+      loadCapacityKg,
+      passengerCapacity,
+      pricePerTrip
     } = req.body;
 
-    try {
-        await VehicleDetail.updateOne(
-            { _id },
-            {
-                $set: {
-                    vehicleName,
-                    vehicleType,
-                    fuelCapacityLitres,
-                    loadCapacityKg,
-                    passengerCapacity,
-                    pricePerTrip,
-                    filepath
-                }
-            }
-        );
+    const newFile = req.file?.filename;
 
-        return res.status(200).json({
-            success: true,
-            message: "Vehicle updated successfully"
-        });
-
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            success: false,
-            message: "Server error"
-        });
+    const existingVehicle = await VehicleDetail.findById(_id);
+    if (!existingVehicle) {
+      return res.status(404).json({
+        success: false,
+        message: "Vehicle not found"
+      });
     }
+
+    // If a new image is uploaded, delete the old image
+    if (newFile && existingVehicle.filepath) {
+  const oldPath = path.join(__dirname, "../../uploads", existingVehicle.filepath);
+  console.log("Trying to delete old image at:", oldPath);
+
+  try {
+    if (fs.existsSync(oldPath)) {
+      fs.unlinkSync(oldPath);
+      console.log("Old image deleted successfully");
+    } else {
+      console.log("Old image file does NOT exist, nothing to delete");
+    }
+  } catch (err) {
+    console.error("Failed to delete old image:", err);
+  }
+}
+
+    const updateData = {
+      vehicleName,
+      vehicleType,
+      fuelCapacityLitres,
+      loadCapacityKg,
+      passengerCapacity,
+      pricePerTrip,
+    };
+
+    if (newFile) {
+      updateData.filepath = newFile; // only update image if new one is uploaded
+    }
+
+    await VehicleDetail.updateOne({ _id }, { $set: updateData });
+
+    return res.status(200).json({
+      success: true,
+      message: "Vehicle updated successfully"
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
 };
 
 // DELETE - Delete a vehicle by ID
