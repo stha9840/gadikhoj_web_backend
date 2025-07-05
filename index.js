@@ -6,6 +6,7 @@ const connectDB = require("./config/db");
 const adminUserRoute = require("./routes/admin/adminUserRoute")
 const adminVehicleRoute = require("./routes/admin/adminVehicleRoute");
 const bookingRoute = require("./routes/bookingRoute")
+const savedVehicleRoute = require("./routes/savedVehicleRoute");
 
 // Load environment variables from .env file
 require('dotenv').config();
@@ -34,12 +35,14 @@ app.use("/api/admin/user", adminUserRoute)
 app.use("/api/admin/vehicle", adminVehicleRoute);
 app.use("/api/bookings", bookingRoute );// booking route added
 app.use("/api/admin/bookings", bookingRoute );// booking route added
+// app.use("/api/savedvehicles", savedVehicleRoute);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Define server port
 const PORT = process.env.PORT || 5000;
 
+
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
