@@ -35,7 +35,7 @@ app.use("/api/admin/user", adminUserRoute)
 app.use("/api/admin/vehicle", adminVehicleRoute);
 app.use("/api/bookings", bookingRoute );// booking route added
 app.use("/api/admin/bookings", bookingRoute );// booking route added
-// app.use("/api/savedvehicles", savedVehicleRoute);
+app.use("/api/saved-vehicles", savedVehicleRoute);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Define server port

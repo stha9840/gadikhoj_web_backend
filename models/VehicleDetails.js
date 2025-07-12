@@ -19,7 +19,7 @@ const VehicleDetailsSchema = new mongoose.Schema(
             required: true,
         },
         passengerCapacity: {
-            type: String, // or [Number] if min-max
+            type: String,
             required: true,
         },
         pricePerTrip: {
@@ -27,9 +27,12 @@ const VehicleDetailsSchema = new mongoose.Schema(
             required: true,
         },
         filepath: {
-            type: String
+            type: String,
         },
-
+        vehicleDescription: {
+            type: String,
+            required: false, 
+        },
     },
     { timestamps: true }
 );

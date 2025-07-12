@@ -10,4 +10,4 @@ router.post('/login', loginUser)
 
 
 module.exports = router;
-//user Route added
+

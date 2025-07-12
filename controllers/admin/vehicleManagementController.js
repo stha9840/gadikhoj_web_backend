@@ -18,7 +18,8 @@ exports.createVehicle = async (req, res) => {
             fuelCapacityLitres,
             loadCapacityKg,
             passengerCapacity,
-            pricePerTrip
+            pricePerTrip,
+            vehicleDescription
         } = JSON.parse(req.body.vehicle);
 
         const filepath = req.file ? req.file.filename : null;
@@ -31,7 +32,8 @@ exports.createVehicle = async (req, res) => {
             loadCapacityKg,
             passengerCapacity,
             pricePerTrip,
-            filepath
+            filepath,
+            vehicleDescription
         });
 
         await newVehicle.save();
@@ -81,7 +83,8 @@ exports.updateVehicle = async (req, res) => {
       fuelCapacityLitres,
       loadCapacityKg,
       passengerCapacity,
-      pricePerTrip
+      pricePerTrip,
+      vehicleDescription
     } = req.body;
 
     const newFile = req.file?.filename;
@@ -118,6 +121,7 @@ exports.updateVehicle = async (req, res) => {
       loadCapacityKg,
       passengerCapacity,
       pricePerTrip,
+      vehicleDescription
     };
 
     if (newFile) {
