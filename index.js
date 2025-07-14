@@ -30,6 +30,7 @@ let corsOptions = {
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Load Routes
 const userRoute = require("./routes/userRoute"); 
+const Module = require("module");
 // Mount routes with prefix
 app.use("/api/auth", userRoute) 
 app.use("/api/admin/user", adminUserRoute)
@@ -41,10 +42,12 @@ app.use("/api/reviews", reviewRoute);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Define server port
-const PORT = process.env.PORT || 5000;
+// const PORT = process.env.PORT || 5000;
 
 
-// Start server
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+// // Start server
+// app.listen(PORT, '0.0.0.0', () => {
+//   console.log(`🚀 Server running on http://localhost:${PORT}`);
+// });
+
+module.exports = app

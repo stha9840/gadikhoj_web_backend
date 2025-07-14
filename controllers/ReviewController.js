@@ -17,7 +17,7 @@ exports.getVehicleReviews = async (req, res) => {
     const { vehicleId } = req.params;
 
     const reviews = await Review.find({ vehicleId })
-      .populate("userId", "username")
+      .populate("userId", "username email")
       .sort({ createdAt: -1 });
 
     res.status(200).json(reviews);
