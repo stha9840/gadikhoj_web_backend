@@ -28,7 +28,7 @@ exports.getRelatedVehicles = async (req, res) => {
   }
 };
 
-// GET /api/vehicles/search?query=...
+// ✅ GET /api/vehicles/search?query=...
 exports.searchVehicles = async (req, res) => {
   try {
     const query = req.query.query || "";
@@ -46,3 +46,13 @@ exports.searchVehicles = async (req, res) => {
     res.status(500).json({ message: 'Search failed' });
   }
 };
+// GET /api/vehicles/types
+exports.getVehicleTypes = async (req, res) => {
+  try {
+    const types = await Vehicle.distinct("vehicleType");
+    res.json(types); // sends array of unique vehicle types
+  } catch (err) {
+    res.status(500).json({ message: "Server error fetching vehicle types" });
+  }
+};
+
