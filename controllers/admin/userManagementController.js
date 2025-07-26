@@ -184,3 +184,58 @@ exports.getLoggedInUserProfile = async (req, res) => {
     data: req.user 
   });
 };
+
+
+exports.updateLoggedInUserProfile = async (req, res) => {
+  const { username, email } = req.body;
+
+  try {
+    if (username) {
+      const existingUser = await User.findOne({ username, _id: { $ne: req.user._id } });
+      if (existingUser) {
+        return res.status(400).json({ success: false, message: "Username already taken" });
+      }
+    }
+    if (email) {
+      const existingEmailUser = await User.findOne({ email, _id: { $ne: req.user._id } });
+      if (existingEmailUser) {
+        return res.status(400).json({ success: false, message: "Email already in use" });
+      }
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        ...(username && { username }),
+        ...(email && { email }),
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: updatedUser.toObject({ 
+        getters: true, 
+        versionKey: false,
+        transform: (doc, ret) => {
+          delete ret.password;
+          return ret;
+        }
+      }),
+    });
+  } catch (err) {
+    console.error("🔥 Error in updateLoggedInUserProfile:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};

@@ -12,7 +12,8 @@ exports.authenticateUser = async (req, res, next) => {
         }
         const token = authHeader.split(" ")[1] // get token after Bearar prefix
         const decoded = jwt.verify(token, process.env.SECRET) 
-        const user = await User.findOne({"_id": decoded._id})
+        const user = await User.findById(decoded.id || decoded._id);
+
         if(!user){
             return res.status(401).json(
                 {"success": false, "message": "Token mismatch"}
