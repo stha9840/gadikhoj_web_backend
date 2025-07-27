@@ -239,3 +239,28 @@ exports.updateLoggedInUserProfile = async (req, res) => {
     });
   }
 };
+// Delete logged-in user
+exports.deleteLoggedInUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Your account has been deleted",
+    });
+  } catch (err) {
+    console.error("Error deleting user:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+

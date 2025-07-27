@@ -8,7 +8,8 @@ const {
   deleteOneUser, 
   getOneUser, 
   getLoggedInUserProfile, 
-  updateLoggedInUserProfile 
+  updateLoggedInUserProfile,
+  deleteLoggedInUser       
 } = require('../controllers/admin/userManagementController');
 const { authenticateUser } = require('../middlewares/authenticateUser');
 
@@ -24,6 +25,10 @@ router.get('/me', authenticateUser, getLoggedInUserProfile);
 
 // Route to update the currently logged-in user's profile
 router.put('/update', authenticateUser, updateLoggedInUserProfile);
+
+// Delete the currently logged-in user's account
+router.delete('/delete', authenticateUser, deleteLoggedInUser);
+
 
 // --- Generic (parameterized) routes ---
 // These should come last.
