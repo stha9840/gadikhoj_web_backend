@@ -187,28 +187,54 @@ exports.getLoggedInUserProfile = async (req, res) => {
 
 
 exports.updateLoggedInUserProfile = async (req, res) => {
-  const { username, email } = req.body;
+  const { username, email, currentPassword, newPassword } = req.body;
 
   try {
+    const updateFields = {};
+
+    // Check for unique username
     if (username) {
       const existingUser = await User.findOne({ username, _id: { $ne: req.user._id } });
       if (existingUser) {
         return res.status(400).json({ success: false, message: "Username already taken" });
       }
+      updateFields.username = username;
     }
+
+    // Check for unique email
     if (email) {
       const existingEmailUser = await User.findOne({ email, _id: { $ne: req.user._id } });
       if (existingEmailUser) {
         return res.status(400).json({ success: false, message: "Email already in use" });
       }
+      updateFields.email = email;
+    }
+
+    // Handle password update
+    if (newPassword) {
+      if (!currentPassword) {
+        return res.status(400).json({
+          success: false,
+          message: "Current password is required to set a new password",
+        });
+      }
+
+      const user = await User.findById(req.user._id);
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({
+          success: false,
+          message: "Current password is incorrect",
+        });
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      updateFields.password = hashedPassword;
     }
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      {
-        ...(username && { username }),
-        ...(email && { email }),
-      },
+      updateFields,
       { new: true, runValidators: true }
     );
 
@@ -222,13 +248,13 @@ exports.updateLoggedInUserProfile = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully",
-      user: updatedUser.toObject({ 
-        getters: true, 
+      user: updatedUser.toObject({
+        getters: true,
         versionKey: false,
         transform: (doc, ret) => {
           delete ret.password;
           return ret;
-        }
+        },
       }),
     });
   } catch (err) {
@@ -239,6 +265,7 @@ exports.updateLoggedInUserProfile = async (req, res) => {
     });
   }
 };
+
 // Delete logged-in user
 exports.deleteLoggedInUser = async (req, res) => {
   try {
