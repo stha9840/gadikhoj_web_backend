@@ -1,7 +1,13 @@
 const express = require("express")
 const router = express.Router()
-const { createUser, getUsers, updateOneUser, deleteOneUser, getOneUser, getUserCount} = require("../../controllers/admin/userManagementController")
+const { createUser, getUsers, updateOneUser, deleteOneUser, getOneUser, getUserCount, resetPassword, sendResetLink} = require("../../controllers/admin/userManagementController")
 const { isAdmin, isUser, authenticateUser } = require("../../middlewares/authenticateUser")
+
+
+// --- Public Password Reset Routes ---
+router.post("/request-reset", sendResetLink);
+router.post("/reset-password/:token", resetPassword);
+
 
 router.post(
     '/create',

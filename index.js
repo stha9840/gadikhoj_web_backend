@@ -1,7 +1,7 @@
 // Import core dependencies
 const express = require("express");
 const path = require("path");
-const dotenv = require("dotenv");
+// const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const adminUserRoute = require("./routes/admin/adminUserRoute")
 const adminVehicleRoute = require("./routes/admin/adminVehicleRoute");
@@ -12,7 +12,7 @@ const vehicleRoute = require("./routes/vehicleRoute");
 
 
 // Load environment variables from .env file
-require('dotenv').config();
+// require('dotenv').config();
 
 
 // Connect to MongoDB

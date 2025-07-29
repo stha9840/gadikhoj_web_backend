@@ -1,6 +1,7 @@
 const User = require("../../models/User");
 const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 // Register User
 exports.createUser = async (req, res) => {
@@ -288,6 +289,77 @@ exports.deleteLoggedInUser = async (req, res) => {
       success: false,
       message: "Server error",
     });
+  }
+};
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
+exports.sendResetLink = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.SECRET, {
+      expiresIn: "15m",
+    });
+    const resetUrl = `${process.env.CLIENT_URL}/reset-password/${token}`;
+
+    const mailOptions = {
+  from: `"Gadi Khoj Support" <${process.env.EMAIL_USER}>`,
+  to: email,
+  subject: "Reset Your Gadi Khoj Password",
+  html: `
+    <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h2 style="color: #2c3e50;">Gadi Khoj - Password Reset Request</h2>
+      <p>Hi there,</p>
+      <p>We received a request to reset your password for your Gadi Khoj account.</p>
+      <p>Click the button below to reset your password. This link will expire in 15 minutes for your security.</p>
+      <a href="${resetUrl}" 
+         style="display:inline-block; padding:10px 20px; margin-top:10px; background-color:#007bff; color:#fff; text-decoration:none; border-radius:5px;">
+        Reset Password
+      </a>
+      <p style="margin-top:20px;">If you didn’t request this, you can safely ignore this email.</p>
+      <p style="color: #999;">—  Gadi Khoj </p>
+    </div>
+  `,
+};
+
+
+    // Use await to send the mail and catch any errors
+    const info = await transporter.sendMail(mailOptions);
+    
+    console.log("Email sent: " + info.response);
+    res.status(200).json({ success: true, message: "Reset email sent" });
+
+  } catch (err) {
+    // Log the actual error to the console for debugging
+    console.error("🔥 Error in sendResetLink:", err); 
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET);
+    const hashed = await bcrypt.hash(password, 10);
+    await User.findByIdAndUpdate(decoded.id, { password: hashed });
+
+    res.status(200).json({ success: true, message: "Password updated" });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ success: false, message: "Invalid or expired token" });
   }
 };
 
